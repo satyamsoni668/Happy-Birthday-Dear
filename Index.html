@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Tillana:wght@600&family=Poppins:wght@800&display=swap" rel="stylesheet">
+
+<title>Birthday Wish</title>
+
+<style>
+
+body{
+margin:0;
+text-align:center;
+overflow:hidden;
+color:white;
+font-family:sans-serif;
+
+/* 🎉 PARTY BACKGROUND */
+background:
+radial-gradient(circle at 20% 20%, #ff9bd3 0%, transparent 40%),
+radial-gradient(circle at 80% 30%, #ffd86b 0%, transparent 40%),
+radial-gradient(circle at 50% 80%, #7be0ff 0%, transparent 45%),
+linear-gradient(135deg,#6a5cff,#ff6ec4,#ffa751);
+background-size:cover;
+}
+
+/* intro */
+#intro{
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+animation:introFade 3s forwards;
+z-index:10;
+}
+@keyframes introFade{
+100%{opacity:0;visibility:hidden;}
+}
+
+/* falling items */
+.fall{
+position:fixed;
+top:-40px;
+font-size:22px;
+animation:fall linear forwards;
+pointer-events:none;
+}
+@keyframes fall{
+to{transform:translateY(105vh);}
+}
+
+/* lyrics */
+.lyrics{
+font-family:'Tillana', cursive;
+font-size:28px;
+line-height:1.4;
+max-width:95%;
+margin:18px auto 5px;
+min-height:200px;
+text-shadow:0 0 10px rgba(0,0,0,.4);
+}
+
+.word{opacity:0;transition:.7s;}
+.show{opacity:1;}
+
+/* image */
+.imgWrap{
+position:relative;
+width:92%;
+max-width:350px;
+height:500px;
+margin:10px auto;
+border-radius:24px;
+overflow:hidden;
+animation:zoomIn 1.2s ease, pulse 3s infinite;
+}
+
+.photo{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* soft merge fade */
+.imgWrap::after{
+content:"";
+position:absolute;
+inset:0;
+background:radial-gradient(circle,
+rgba(0,0,0,0) 50%,
+rgba(0,0,0,.35) 75%,
+rgba(0,0,0,.6) 100%);
+}
+
+@keyframes pulse{
+0%{box-shadow:0 0 25px rgba(255,255,255,.3);}
+50%{box-shadow:0 0 70px rgba(255,255,255,.7);}
+100%{box-shadow:0 0 25px rgba(255,255,255,.3);}
+}
+
+@keyframes zoomIn{
+from{transform:scale(.6);opacity:0;}
+to{transform:scale(1);opacity:1;}
+}
+
+/* hearts */
+.heart{
+position:absolute;
+font-size:18px;
+animation:floatUp linear forwards;
+}
+@keyframes floatUp{
+to{transform:translateY(-140px);opacity:0;}
+}
+
+/* title glow */
+.title{
+font-family:'Poppins';
+font-size:36px;
+font-weight:900;
+margin:10px 0;
+background:linear-gradient(90deg,#fff,#ffe066,#fff);
+background-size:200% auto;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:shine 3s linear infinite, floatText 3s ease-in-out infinite;
+text-shadow:0 0 25px rgba(255,255,255,.7);
+}
+
+@keyframes shine{to{background-position:200% center;}}
+@keyframes floatText{
+50%{transform:translateY(-6px);}
+}
+
+/* fireworks */
+.fire{
+position:fixed;
+font-size:20px;
+animation:burst 1.4s forwards;
+}
+@keyframes burst{
+to{
+transform:translate(var(--x),var(--y)) scale(.3);
+opacity:0;
+}
+}
+
+button{
+margin:12px;
+padding:14px 26px;
+font-size:18px;
+border:none;
+border-radius:12px;
+background:white;
+color:#333;
+font-weight:bold;
+box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="lyrics" id="lyrics"></div>
+
+<div class="imgWrap" id="imgWrap">
+<img src="/photos/123.jpg" class="photo">
+</div>
+
+<div class="title">Happy Birthday Shivani</div>
+
+<button onclick="start()">Tap to Start 🎵</button>
+
+<audio id="song" src="Chand.mp3"></audio>
+
+<script>
+
+/* lyrics */
+const text=`चाँद सिफ़ारिश जो करता हमारी
+देता वो तुमको बता
+शर्म-ओ-हया के परदे गिरा के
+करनी है हमको खता
+जिद्द है अब तो है खुद को मिटाना
+होना है तुझमे फ़ना`;
+
+const box=document.getElementById("lyrics");
+text.split("\n").forEach(line=>{
+ let d=document.createElement("div");
+ line.split(" ").forEach(w=>{
+  let s=document.createElement("span");
+  s.className="word";
+  s.textContent=w+" ";
+  d.appendChild(s);
+ });
+ box.appendChild(d);
+});
+
+const spans=document.querySelectorAll(".word");
+let i=0;
+function reveal(){
+ if(i<spans.length){
+  spans[i].classList.add("show");
+  setTimeout(reveal,720);
+  i++;
+ }
+}
+
+/* falling stars & balloons */
+function fallItem(){
+ let e=document.createElement("div");
+ e.className="fall";
+ e.innerHTML=Math.random()<0.5?"✨":"🎈";
+ e.style.left=Math.random()*100+"vw";
+ e.style.animationDuration=(7+Math.random()*5)+"s";
+ document.body.appendChild(e);
+ setTimeout(()=>e.remove(),12000);
+}
+setInterval(fallItem,700);
+
+/* hearts around image */
+function heart(){
+ let h=document.createElement("div");
+ h.className="heart";
+ h.innerHTML="💖";
+ h.style.left=Math.random()*320+"px";
+ h.style.bottom="20px";
+ h.style.animationDuration=(2+Math.random()*2)+"s";
+ imgWrap.appendChild(h);
+ setTimeout(()=>h.remove(),3000);
+}
+setInterval(heart,700);
+
+/* fireworks tap */
+document.body.addEventListener("click",e=>{
+ for(let k=0;k<16;k++){
+  let f=document.createElement("div");
+  f.className="fire";
+  f.innerHTML=["✨","🎆","🎊"][Math.floor(Math.random()*3)];
+  f.style.left=e.clientX+"px";
+  f.style.top=e.clientY+"px";
+  f.style.setProperty("--x",(Math.random()*200-100)+"px");
+  f.style.setProperty("--y",(Math.random()*200-100)+"px");
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),1400);
+ }
+});
+
+function start(){
+ const a=document.getElementById("song");
+ a.play();
+ reveal();
+}
+
+</script>
+
+</body>
+</html>
